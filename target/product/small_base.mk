@@ -27,10 +27,7 @@ PRODUCT_PACKAGES := \
     WAPPushManager
 
 # Put en_US first in the list, so make it default.
-PRODUCT_LOCALES := en_US
-
-# Get some sounds
-$(call inherit-product-if-exists, frameworks/base/data/sounds/NewAudio.mk)
+PRODUCT_LOCALES := en_GB
 
 # Get the English TTS language pack
 $(call inherit-product, external/svox/pico/lang/PicoLangEnUsInSystem.mk)
