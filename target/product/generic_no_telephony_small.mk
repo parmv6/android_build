@@ -69,7 +69,7 @@ PRODUCT_COPY_FILES := \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.carrier=unknown
 
-$(call inherit-product-if-exists, frameworks/base/data/fonts/fonts_small.mk)
+$(call inherit-product, frameworks/base/data/fonts/fonts.mk)
 $(call inherit-product-if-exists, frameworks/base/data/keyboards/keyboards.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core.mk)
 
