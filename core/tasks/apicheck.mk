@@ -22,6 +22,23 @@ ifeq (,$(filter true, $(BUILD_TINY_ANDROID) $(TARGET_BUILD_PDK)))
 
 .PHONY: checkapi
 
+# eval this to define a rule that runs apicheck.
+#
+# Args:
+#    $(1)  target
+#    $(2)  stable api file
+#    $(3)  api file to be tested
+#    $(4)  arguments for apicheck
+#    $(5)  command to run if apicheck failed
+define check-api
+$(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/$(strip $(1))-timestamp: $(2) $(3) $(APICHECK)
+	@echo -e ${CL_YLW}"Checking API:"${CL_RST} $(1)
+	$(hide) ( $(APICHECK_COMMAND) $(4) $(2) $(3) || ( $(5) ; exit 38 ) )
+	$(hide) mkdir -p $$(dir $$@)
+	$(hide) touch $$@
+checkapi: $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/$(strip $(1))-timestamp
+endef
+
 # Run the checkapi rules by default.
 droidcore: checkapi
 

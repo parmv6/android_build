@@ -88,7 +88,7 @@ class EdifyGenerator(object):
   def AssertDevice(self, device):
     """Assert that the device identifier is the given string."""
     cmd = ('assert(' +
-           ' || \0'.join(['getprop("ro.product.device") == "%s" || getprop("ro.build.product") == "%s"'
+           ' || \0'.join(['getprop("ro.product.device") == "%s" || getprop ("ro.build.product") == "%s"'
                          % (i, i) for i in device.split(",")]) +
            ');')
     self.script.append(self._WordWrap(cmd))
@@ -107,7 +107,12 @@ class EdifyGenerator(object):
     self.script.append('set_perm(0, 0, 0777, "/tmp/backuptool.sh");')
     self.script.append('set_perm(0, 0, 0644, "/tmp/backuptool.functions");')
     self.script.append(('run_program("/tmp/backuptool.sh", "%s");' % command))
+    #self.script.append('run_program("/sbin/busybox", "cp", "/system/build.prop", "/tmp/build.prop");')
     if command == "restore":
+        #self.script.append('package_extract_file("system/bin/density.sh", "/tmp/density.sh");')
+        #self.script.append('set_perm(0, 0, 0777, "/tmp/density.sh");')
+        #self.script.append('run_program("/tmp/density.sh", "build.prop");')
+        #self.script.append('delete("/system/bin/density.sh");')
         self.script.append('delete("/system/bin/backuptool.sh");')
         self.script.append('delete("/system/bin/backuptool.functions");')
 
@@ -154,7 +159,7 @@ class EdifyGenerator(object):
       self.mounts.add(p.mount_point)
 
   def Unmount(self, mount_point):
-    """Unmount the partiiton with the given mount_point."""
+    """Unmount the partition with the given mount_point."""
     if mount_point in self.mounts:
       self.mounts.remove(mount_point)
       self.script.append('unmount("%s");' % (mount_point,))
