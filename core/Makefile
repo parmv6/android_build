@@ -1364,6 +1364,12 @@ endif
 	@# Contents of the data image
 	$(hide) $(call package_files-copy-root, \
 		$(TARGET_OUT_DATA),$(zip_root)/DATA)
+ifdef BOARD_CUSTOM_BOOTIMG_MK
+	@# Prebuilt boot images
+	$(hide) mkdir -p $(zip_root)/BOOTABLE_IMAGES
+	$(hide) $(ACP) $(INSTALLED_BOOTIMAGE_TARGET) $(zip_root)/BOOTABLE_IMAGES/
+	$(hide) $(ACP) $(INSTALLED_RECOVERYIMAGE_TARGET) $(zip_root)/BOOTABLE_IMAGES/
+endif
 ifdef BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE
 	@# Contents of the vendor image
 	$(hide) $(call package_files-copy-root, \
@@ -1411,14 +1417,14 @@ endif
 ifdef TARGET_UNIFIED_DEVICE
 	$(hide) echo "override_prop=true" >> $(zip_root)/META/misc_info.txt
 endif
+ifdef TARGET_NO_SEPARATE_RECOVERY
+	$(hide) echo "no_separate_recovery=true" >> $(zip_root)/META/misc_info.txt
+endif
 ifdef BUILD_NO
 	$(hide) echo "build_number=$(BUILD_NO)" >> $(zip_root)/META/misc_info.txt
 endif
 ifneq ($(TARGET_OTA_EXTRAS_FILE),)
 	$(hide) echo "extras_file=$(TARGET_OTA_EXTRAS_FILE)" >> $(zip_root)/META/misc_info.txt
-endif
-ifneq ($(TARGET_NO_SEPARATE_RECOVERY),)
-	$(hide) echo "no_separate_recovery=true" >> $(zip_root)/META/misc_info.txt
 endif
 	$(hide) echo "minigzip=$(MINIGZIP)" >> $(zip_root)/META/misc_info.txt
 	$(call generate-userimage-prop-dictionary, $(zip_root)/META/misc_info.txt)
